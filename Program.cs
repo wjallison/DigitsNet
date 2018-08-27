@@ -27,10 +27,9 @@ namespace DigitsNet
 
             Console.ReadKey();
         }
-        public double sigmoid(double z)
-        {
-            return 1.0 / (1.0 + Math.Pow(2.71828, z));
-        }
+        
+
+        
     }
     public class Network
     {
@@ -52,6 +51,155 @@ namespace DigitsNet
                 weights.Add(Matrix<double>.Build.Random(sizes[i], sizes[i - 1]));
             }
 
+        }
+
+
+        /*TODO Verify that this is correct*/
+        public Matrix<double> feedForward(Matrix<double> a)
+        {
+            for (int i = 0; i < biases.Count(); i++)
+            {
+                for(int j = 0; j < weights.Count(); j++)
+                {
+                    a = sigmoid(weights[i] * a + biases[j]);
+                }
+            }
+
+            return a;
+        }
+
+        public double sigmoid(double z)
+        {
+            return 1.0 / (1.0 + Math.Pow(2.71828, -z));
+        }
+        public double sigmoidPrime(double z)
+        {
+            return sigmoid(z) * (1 - sigmoid(z));
+        }
+
+        public Matrix<double> sigmoid(Matrix<double> z)
+        {
+            Matrix<double> result = z;
+            for(int i =0;i< z.RowCount; i++)
+            {
+                result[i, 0] = sigmoid(z[i, 0]);
+            }
+
+            return result;
+        }
+        public Matrix<double> sigmoidPrime(Matrix<double> z)
+        {
+            Matrix<double> result = z;
+            for(int i = 0; i < z.RowCount; i++)
+            {
+                result[i, 0] = sigmoidPrime(z[i, 0]);
+            }
+            return result;
+        }
+
+        public void SGD(List<Matrix<double>> trainingData,int reps, int miniBatchSize,
+            double N, List<Matrix<double>> testData = null)
+        {
+            int nTest = 0;
+
+            if (testData != null)
+            {
+                nTest = testData.Count();
+            }
+
+            int n = trainingData.Count();
+            for(int i = 0; i < reps; i++)
+            {
+                //init mini batch
+                Random rand = new Random();
+                List<Matrix<double>> miniBatch = new List<Matrix<double>>();
+                for(int j = 0; j < miniBatchSize; j++)
+                {
+                    miniBatch.Add(trainingData[rand.Next(0, n - 1)]);
+                }
+
+                //update weights based on mini batch
+                for(int j = 0; j < miniBatchSize; j++)
+                {
+                    updateMiniBatch(miniBatch[i], N);
+                }
+
+
+
+            }
+        }
+
+        //public void updateMiniBatch(List<Matrix<double>> miniBatch,double N)
+        public void updateMiniBatch(Matrix<double> miniBatch,double N)
+        {
+            List<Matrix<double>> nabla_b = new List<Matrix<double>>();
+            List<Matrix<double>> nabla_w = new List<Matrix<double>>();
+            for (int i = 0; i < biases.Count(); i++)
+            {
+                nabla_b.Add(Matrix<double>.Build.Dense(biases[i].RowCount, 1));
+            }
+            for(int i = 0; i < weights.Count(); i++)
+            {
+                nabla_w.Add(Matrix<double>.Build.Dense(weights[i].RowCount, weights[i].ColumnCount));
+            }
+
+
+            //Acquire gradients
+            for()
+        }
+
+
+        public List<List<Matrix<double>>> backProp(Matrix<double> x, Matrix<double> y)
+        {
+            List<Matrix<double>> activations = new List<Matrix<double>>();
+            Matrix<double> activation = x;
+            activations.Add(x);
+            List<Matrix<double>> zs = new List<Matrix<double>>();
+
+            //List<Matrix<double>> nambla_b = new List<Matrix<double>>();
+            List<Matrix<double>> nambla_b = biases;
+            List<Matrix<double>> nambla_w = weights;
+
+            //Forward
+            for (int i = 1; i < numLayers; i++)
+            {
+                Matrix<double> z = weights[i] * activation + biases[i];
+                zs.Add(z);
+                activation = sigmoid(z);
+                activations.Add(activation);
+            }
+
+            //Backward
+            Matrix<double> del = (activations[-1] - y) * sigmoidPrime(zs[-1]);
+
+            nambla_b[-1] = del;
+            nambla_w[-1] = del * activations[-2].Transpose();
+
+            for(int l = 2; l < numLayers; l++)
+            {
+                Matrix<double> z = zs[-1];
+                Matrix<double> sp = sigmoidPrime(z);
+                del = weights[-l + 1].Transpose() * del * sp;
+                nambla_b[-l] = del;
+                nambla_w[-l] = del * activations[-l - 1].Transpose();
+            }
+
+            List<List<Matrix<double>>> res = new List<List<Matrix<double>>>();
+            res.Add(nambla_b);
+            res.Add(nambla_w);
+            return res;
+        }
+        public Matrix<double> Hadamard(Matrix<double> slf, Matrix<double> other)
+        {
+            Matrix<double> res = slf;
+            for (int i = 0; i < slf.RowCount; i++)
+            {
+                for(int j = 0; j < slf.ColumnCount; j++)
+                {
+                    res[i, j] = slf[i, j] * other[i, j];
+                }
+            }
+            return res;
         }
     }
 }
