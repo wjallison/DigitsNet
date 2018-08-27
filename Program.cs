@@ -134,6 +134,9 @@ namespace DigitsNet
         {
             List<Matrix<double>> nabla_b = new List<Matrix<double>>();
             List<Matrix<double>> nabla_w = new List<Matrix<double>>();
+
+            List<Matrix<double>> d_nabla_b = new List<Matrix<double>>();
+            List<Matrix<double>> d_nabla_w = new List<Matrix<double>>();
             for (int i = 0; i < biases.Count(); i++)
             {
                 nabla_b.Add(Matrix<double>.Build.Dense(biases[i].RowCount, 1));
@@ -145,7 +148,30 @@ namespace DigitsNet
 
 
             //Acquire gradients
-            for()
+            for(int i = 0; i < miniBatch.RowCount; i++)
+            {
+                List<List<Matrix<double>>> temp = backProp();
+                d_nabla_b = temp[0];
+                d_nabla_w = temp[1];
+
+                for(int j = 0; j < nabla_b.Count(); j++)
+                {
+                    nabla_b[j] = nabla_b[j] + d_nabla_b[j];
+                }
+                for(int j = 0; j < nabla_w.Count(); j++)
+                {
+                    nabla_w[j] = nabla_w[j] + d_nabla_w[j];
+                }
+            }
+
+            for(int i = 0; i < weights.Count(); i++)
+            {
+                weights[i] = weights[i] - (N / miniBatch.Count()) * nabla_w[i];
+            }
+            for(int i = 0; i < biases.Count(); i++)
+            {
+                biases[i] = biases[i] - (N / miniBatch.Count()) * nabla_b[i];
+            }
         }
 
 
