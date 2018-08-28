@@ -97,10 +97,11 @@ namespace DigitsNet
             return result;
         }
 
-        public void SGD(List<Matrix<double>> trainingData,int reps, int miniBatchSize,
+        public void SGD(List<List<Matrix<double>>> trainingData,int reps, int miniBatchSize,
             double N, List<Matrix<double>> testData = null)
         {
             int nTest = 0;
+            List<List<List<Matrix<double>>>> miniBatches = new List<List<List<Matrix<double>>>>();
 
             if (testData != null)
             {
@@ -110,27 +111,34 @@ namespace DigitsNet
             int n = trainingData.Count();
             for(int i = 0; i < reps; i++)
             {
-                //init mini batch
+                //init mini batches
                 Random rand = new Random();
-                List<Matrix<double>> miniBatch = new List<Matrix<double>>();
+
+                //List<List<List<Matrix<double>>>> miniBatches = new List<List<List<Matrix<double>>>>();
+
+                List<List<Matrix<double>>> miniBatch = new List<List<Matrix<double>>>();
                 for(int j = 0; j < miniBatchSize; j++)
                 {
                     miniBatch.Add(trainingData[rand.Next(0, n - 1)]);
                 }
 
+                miniBatches.Add(miniBatch);
                 //update weights based on mini batch
-                for(int j = 0; j < miniBatchSize; j++)
-                {
-                    updateMiniBatch(miniBatch[i], N);
-                }
+                //for(int j = 0; j < miniBatchSize; j++)
+                //{
+                //    updateMiniBatch(miniBatch[i], N);
+                //}
 
+            }
 
-
+            for(int i = 0; i < reps; i++)
+            {
+                updateMiniBatch(miniBatches[i], N);
             }
         }
 
         //public void updateMiniBatch(List<Matrix<double>> miniBatch,double N)
-        public void updateMiniBatch(Matrix<double> miniBatch,double N)
+        public void updateMiniBatch(List<List<Matrix<double>>> miniBatch,double N)
         {
             List<Matrix<double>> nabla_b = new List<Matrix<double>>();
             List<Matrix<double>> nabla_w = new List<Matrix<double>>();
@@ -148,9 +156,9 @@ namespace DigitsNet
 
 
             //Acquire gradients
-            for(int i = 0; i < miniBatch.RowCount; i++)
+            for(int i = 0; i < miniBatch.Count(); i++)
             {
-                List<List<Matrix<double>>> temp = backProp();
+                List<List<Matrix<double>>> temp = backProp(miniBatch[i][0],miniBatch[i][1]);
                 d_nabla_b = temp[0];
                 d_nabla_w = temp[1];
 
