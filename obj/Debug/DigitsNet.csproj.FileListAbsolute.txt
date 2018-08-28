@@ -1,0 +1,10 @@
+C:\Users\Jack\source\repos\DigitsNet\DigitsNet\bin\Debug\DigitsNet.exe.config
+C:\Users\Jack\source\repos\DigitsNet\DigitsNet\bin\Debug\DigitsNet.exe
+C:\Users\Jack\source\repos\DigitsNet\DigitsNet\bin\Debug\DigitsNet.pdb
+C:\Users\Jack\source\repos\DigitsNet\DigitsNet\bin\Debug\MathNet.Numerics.dll
+C:\Users\Jack\source\repos\DigitsNet\DigitsNet\bin\Debug\MathNet.Numerics.xml
+C:\Users\Jack\source\repos\DigitsNet\DigitsNet\obj\Debug\DigitsNet.csprojAssemblyReference.cache
+C:\Users\Jack\source\repos\DigitsNet\DigitsNet\obj\Debug\DigitsNet.csproj.CoreCompileInputs.cache
+C:\Users\Jack\source\repos\DigitsNet\DigitsNet\obj\Debug\DigitsNet.csproj.CopyComplete
+C:\Users\Jack\source\repos\DigitsNet\DigitsNet\obj\Debug\DigitsNet.exe
+C:\Users\Jack\source\repos\DigitsNet\DigitsNet\obj\Debug\DigitsNet.pdb

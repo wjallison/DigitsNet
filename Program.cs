@@ -14,11 +14,11 @@ namespace DigitsNet
     {
         static void Main(string[] args)
         {
+            ReadMNIST rd = new ReadMNIST();
+            List<int> ls = new List<int>{ 784, 30, 10 };
+            Network n = new Network(ls);
 
-
-
-
-
+            n.SGD(rd.allData, 30, 10, 3.0);
 
 
 
