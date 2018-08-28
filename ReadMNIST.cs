@@ -42,7 +42,7 @@ namespace DigitsNet
             for(int di = 0; di < 10000; di++)
             {
                 allData.Add(new List<Matrix<double>>());
-                Matrix<double> m = Matrix<double>.Build.Dense(28, 28);
+                Matrix<double> m = Matrix<double>.Build.Dense(784, 1);
                 Matrix<double> l = Matrix<double>.Build.Dense(10, 1);
 
 
@@ -52,7 +52,8 @@ namespace DigitsNet
                     {
                         byte b = brImages.ReadByte();
                         pixels[i][j] = b;
-                        m[i,j] = Convert.ToDouble(b);
+                        //m[i,j] = Convert.ToDouble(b);
+                        m[i * 28 + j, 0] = Convert.ToDouble(b);
                     }
                 }
 
