@@ -197,7 +197,7 @@ namespace DigitsNet
             //Forward
             for (int i = 0; i < numLayers-1; i++)
             {
-                Console.WriteLine(i);
+                //Console.WriteLine(i);
                 Matrix<double> z = weights[i] * activation + biases[i];
                 zs.Add(z);
                 activation = sigmoid(z);
@@ -207,18 +207,19 @@ namespace DigitsNet
             //Backward
 
             //dimensions of del?
-            Matrix<double> del = (activations[activations.Count()-1] - y).Transpose() * sigmoidPrime(zs[zs.Count()-1]);
+            Matrix<double> del = Hadamard((activations[activations.Count()-1] - y), sigmoidPrime(zs[zs.Count()-1]));
 
             nambla_b[nambla_b.Count()-1] = del;
             nambla_w[nambla_w.Count()-1] = del * activations[activations.Count()-2].Transpose();
 
             for(int l = 2; l < numLayers; l++)
             {
-                Matrix<double> z = zs[zs.Count()-1];
+                Matrix<double> z = zs[zs.Count()-l];
                 Matrix<double> sp = sigmoidPrime(z);
-                del = weights[zs.Count()-l + 1].Transpose() * del * sp;
+                del = weights[weights.Count() - l + 1].Transpose() * del;
+                del = Hadamard(del, sp);
                 nambla_b[nambla_b.Count()-l] = del;
-                nambla_w[nambla_w.Count()-l] = del * activations[-l - 1].Transpose();
+                nambla_w[nambla_w.Count()-l] = del * activations[activations.Count()-l - 1].Transpose();
             }
 
             List<List<Matrix<double>>> res = new List<List<Matrix<double>>>();
