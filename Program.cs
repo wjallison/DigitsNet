@@ -54,7 +54,6 @@ namespace DigitsNet
         }
 
 
-        /*TODO Verify that this is correct*/
         public Matrix<double> feedForward(Matrix<double> a)
         {
             for (int i = 0; i < biases.Count(); i++)
@@ -114,8 +113,6 @@ namespace DigitsNet
                 //init mini batches
                 Random rand = new Random();
 
-                //List<List<List<Matrix<double>>>> miniBatches = new List<List<List<Matrix<double>>>>();
-
                 List<List<Matrix<double>>> miniBatch = new List<List<Matrix<double>>>();
                 for(int j = 0; j < miniBatchSize; j++)
                 {
@@ -123,12 +120,7 @@ namespace DigitsNet
                 }
 
                 miniBatches.Add(miniBatch);
-                //update weights based on mini batch
-                //for(int j = 0; j < miniBatchSize; j++)
-                //{
-                //    updateMiniBatch(miniBatch[i], N);
-                //}
-
+                
             }
 
             for(int i = 0; i < reps; i++)
@@ -137,7 +129,6 @@ namespace DigitsNet
             }
         }
 
-        //public void updateMiniBatch(List<Matrix<double>> miniBatch,double N)
         public void updateMiniBatch(List<List<Matrix<double>>> miniBatch,double N)
         {
             List<Matrix<double>> nabla_b = new List<Matrix<double>>();
@@ -190,14 +181,12 @@ namespace DigitsNet
             activations.Add(x);
             List<Matrix<double>> zs = new List<Matrix<double>>();
 
-            //List<Matrix<double>> nambla_b = new List<Matrix<double>>();
             List<Matrix<double>> nambla_b = biases;
             List<Matrix<double>> nambla_w = weights;
 
             //Forward
             for (int i = 0; i < numLayers-1; i++)
             {
-                //Console.WriteLine(i);
                 Matrix<double> z = weights[i] * activation + biases[i];
                 zs.Add(z);
                 activation = sigmoid(z);
@@ -206,7 +195,6 @@ namespace DigitsNet
 
             //Backward
 
-            //dimensions of del?
             Matrix<double> del = Hadamard((activations[activations.Count()-1] - y), sigmoidPrime(zs[zs.Count()-1]));
 
             nambla_b[nambla_b.Count()-1] = del;
